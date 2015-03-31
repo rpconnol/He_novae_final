@@ -1,0 +1,112 @@
+&star_job
+
+    show_log_description_at_start = .false.
+
+    load_saved_model = .true.
+    saved_model_name = 'models/1.000_Tc_7.2.mod'
+    !saved_model_name = 'models/1.000_Tc_7.6.mod'
+    !saved_model_name = 'models/betweenbursts_nacre_2e-7.mod'
+    !saved_model_name = 'models/betweenbursts_hhr_2e-9.mod'
+
+    !save_model_number = 4080
+    !save_model_filename = 'paused_for_debug.mod'
+    
+
+    set_initial_model_number = .true.
+    initial_model_number = 0
+
+  !! Needs to be non-zero if using the evolving mdot !!
+    set_initial_age = .true.
+    initial_age = 0 ! in years
+
+    !set_initial_dt = .true.
+    !years_for_initial_dt = 1 ! in years
+
+    change_net = .true.      
+    new_net_name = 'co_burn.net'
+
+
+  !! Choose ONE of the following and ensure the other is *commented out* !!
+    rate_tables_dir = './3a_rates/HHR'  
+    !set_rate_3a = 'NACRE' 
+
+    
+    set_tau_factor = .true. ! the test model was saved with this tau factor
+    set_to_this_tau_factor = 300
+
+    !relax_tau_factor = .true. ! gradually change tau_factor, reconverging at each step.
+    !relax_to_this_tau_factor = 1e4 
+    !dlogtau_factor = 0.1 ! change log10(tau_factor) by at most this amount per step
+
+    change_v_flag = .true.
+    new_v_flag = .false.
+
+    pgstar_flag = .true.
+
+    pause_before_terminate = .true.
+
+/ !end of star_job namelist
+
+
+
+&controls
+
+    write_profiles_flag = .false.
+      
+    !photostep = 100
+    !profile_interval = 10
+    !max_num_profile_models = 400
+    !history_interval = 10
+    !terminal_cnt = 10
+    !write_header_frequency = 10
+
+
+
+  ! Stopping conditions
+
+    max_model_number = 10000
+
+    min_timestep_limit = 1d-12
+
+
+
+  ! Accretion controls
+
+    accrete_same_as_surface = .false. 
+    accrete_given_mass_fractions = .true. 
+    num_accretion_species = 1
+    accretion_species_id(1) = 'he4'
+    accretion_species_xa(1) = 1
+
+    ! * Only use one of the following * !
+      mass_change = 2e-9   ! constant rate of accretion (Msun/year)
+      !use_other_adjust_mdot = .true.   ! Evolving mdot, 0.03 * time[yrs]^(-1)
+
+
+
+  ! Mass loss controls
+
+    super_eddington_wind_eta = 1
+    super_eddington_wind_Ledd_factor = 1
+
+    !Future: RLO?
+
+
+
+  ! Other Controls
+
+    varcontrol_target = 1d-3
+
+    okay_to_reduce_gradT_excess = .true.
+
+    use_Type2_opacities = .true.    
+    Zbase = 0.02d0
+
+    which_atm_option = 'grey_and_kap'
+    
+    Pextra_factor = -1
+
+    
+
+
+/ ! end of controls namelist

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm "$MESA_DIR"/data/rates_data/cache/r_he4_he4_he4_to_c12*

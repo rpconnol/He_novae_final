@@ -1,5 +1,3 @@
-# table for experimental rate
-#                         
 #    T8     rate 
 
 3595

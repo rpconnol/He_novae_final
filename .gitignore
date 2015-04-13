@@ -6,5 +6,9 @@ clean
 mk
 rn
 re
+star
 
 src/run.f
+
+.svninfo
+restart_photo

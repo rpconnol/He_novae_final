@@ -3,10 +3,11 @@
     show_log_description_at_start = .false.
 
     load_saved_model = .true.
-    saved_model_name = 'models/1.000_Tc_7.2.mod'
+    !saved_model_name = 'models/1.000_Tc_7.2.mod'
     !saved_model_name = 'models/1.000_Tc_7.6.mod'
-    !saved_model_name = 'models/betweenbursts_nacre_2e-7.mod'
-    !saved_model_name = 'models/betweenbursts_hhr_2e-9.mod'
+    !saved_model_name = 'models/1M_betweenbursts_nacre_2e-7.mod'
+    !saved_model_name = 'models/1M_betweenbursts_hhr_2e-9.mod'
+    saved_model_name = 'models/0.602M_from_3.2z0.02.mod'
 
     !save_model_number = 4080
     !save_model_filename = 'paused_for_debug.mod'
@@ -15,7 +16,7 @@
     set_initial_model_number = .true.
     initial_model_number = 0
 
-  !! Needs to be non-zero if using the evolving mdot !!
+  !! MUST be non-zero if using the evolving mdot !!
     set_initial_age = .true.
     initial_age = 0 ! in years
 
@@ -27,8 +28,8 @@
 
 
   !! Choose ONE of the following and ensure the other is *commented out* !!
-    rate_tables_dir = './3a_rates/HHR'  
-    !set_rate_3a = 'NACRE' 
+    !rate_tables_dir = './3a_rate/HHR'  
+    set_rate_3a = 'NACRE' 
 
     
     set_tau_factor = .true. ! the test model was saved with this tau factor
@@ -64,7 +65,7 @@
 
   ! Stopping conditions
 
-    max_model_number = 10000
+    max_model_number = 60000
 
     min_timestep_limit = 1d-12
 
@@ -79,7 +80,7 @@
     accretion_species_xa(1) = 1
 
     ! * Only use one of the following * !
-      mass_change = 2e-9   ! constant rate of accretion (Msun/year)
+      mass_change = 5e-7   ! constant rate of accretion (Msun/year)
       !use_other_adjust_mdot = .true.   ! Evolving mdot, 0.03 * time[yrs]^(-1)
 
 
@@ -95,7 +96,7 @@
 
   ! Other Controls
 
-    varcontrol_target = 1d-3
+    varcontrol_target = 1d-2
 
     okay_to_reduce_gradT_excess = .true.
 

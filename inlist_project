@@ -3,14 +3,17 @@
     show_log_description_at_start = .false.
 
     load_saved_model = .true.
-    !saved_model_name = 'models/1.000_Tc_7.2.mod'
+    !saved_model_name = 'models/1.000_Tc_7.2.mod'  
     !saved_model_name = 'models/1.000_Tc_7.6.mod'
     !saved_model_name = 'models/1M_betweenbursts_nacre_2e-7.mod'
     !saved_model_name = 'models/1M_betweenbursts_hhr_2e-9.mod'
-    saved_model_name = 'models/0.602M_from_3.2z0.02.mod'
+    !saved_model_name = 'models/0.602M_from_3.2z0.02.mod'
+    !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_8.0.mod'
+    saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5.mod'
+    !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
 
-    !save_model_number = 4080
-    !save_model_filename = 'paused_for_debug.mod'
+    !save_model_number = 5960
+    !save_model_filename = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
     
 
     set_initial_model_number = .true.
@@ -18,10 +21,10 @@
 
   !! MUST be non-zero if using the evolving mdot !!
     set_initial_age = .true.
-    initial_age = 0 ! in years
+    initial_age = 3e4 ! in years
 
-    !set_initial_dt = .true.
-    !years_for_initial_dt = 1 ! in years
+    set_initial_dt = .true.
+    years_for_initial_dt = 1 ! in years
 
     change_net = .true.      
     new_net_name = 'co_burn.net'
@@ -52,11 +55,11 @@
 
 &controls
 
-    write_profiles_flag = .false.
+    write_profiles_flag = .true.
       
     !photostep = 100
     !profile_interval = 10
-    !max_num_profile_models = 400
+    max_num_profile_models = 10
     !history_interval = 10
     !terminal_cnt = 10
     !write_header_frequency = 10
@@ -65,9 +68,11 @@
 
   ! Stopping conditions
 
-    max_model_number = 60000
+    max_model_number = 110000
 
     min_timestep_limit = 1d-12
+
+    !max_age = 2d7
 
 
 
@@ -80,8 +85,8 @@
     accretion_species_xa(1) = 1
 
     ! * Only use one of the following * !
-      mass_change = 5e-7   ! constant rate of accretion (Msun/year)
-      !use_other_adjust_mdot = .true.   ! Evolving mdot, 0.03 * time[yrs]^(-1)
+      !mass_change = 1e-7   ! constant rate of accretion (Msun/year)
+      use_other_adjust_mdot = .true.   ! Evolving mdot, 0.03 * time[yrs]^(-1)
 
 
 
@@ -106,6 +111,19 @@
     which_atm_option = 'grey_and_kap'
     
     Pextra_factor = -1
+
+
+
+
+
+    ! Experimental
+
+      !mixing_length_alpha = 2
+      !use_Ledoux_criterion = .true.
+      !alpha_semiconvection = 0.01
+      !thermohaline_coeff = 2 
+
+      !mesh_delta_coeff = 1.5
 
     
 

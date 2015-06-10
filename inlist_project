@@ -3,13 +3,13 @@
     show_log_description_at_start = .false.
 
     load_saved_model = .true.
-    !saved_model_name = 'models/1.000_Tc_7.2.mod'  
+    saved_model_name = 'models/1.000_Tc_7.2.mod'  
     !saved_model_name = 'models/1.000_Tc_7.6.mod'
     !saved_model_name = 'models/1M_betweenbursts_nacre_2e-7.mod'
     !saved_model_name = 'models/1M_betweenbursts_hhr_2e-9.mod'
     !saved_model_name = 'models/0.602M_from_3.2z0.02.mod'
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_8.0.mod'
-    saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5.mod'
+    !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5.mod'
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
 
     !save_model_number = 5960
@@ -85,7 +85,7 @@
     accretion_species_xa(1) = 1
 
     ! * Only use one of the following * !
-      !mass_change = 1e-7   ! constant rate of accretion (Msun/year)
+      !mass_change = 1e-6   ! constant rate of accretion (Msun/year)
       use_other_adjust_mdot = .true.   ! Evolving mdot, 0.03 * time[yrs]^(-1)
 
 
@@ -124,6 +124,11 @@
       !thermohaline_coeff = 2 
 
       !mesh_delta_coeff = 1.5
+
+
+      !delta_lgL_He_limit = 0.025 ! limit for magnitude of change in lgL_He
+      !delta_lgL_He_hard_limit = 0.5
+      !lgL_He_burn_min = 0.0 ! ignore changes in lgL_He if value is less than this
 
     
 

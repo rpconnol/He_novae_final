@@ -25,6 +25,7 @@
       use star_lib
       use star_def
       use const_def
+      use chem_def
       
       implicit none
       
@@ -110,7 +111,8 @@
          character (len=maxlen_history_column_name) :: names(n)
          real(dp) :: vals(n)
          integer, intent(out) :: ierr
-         integer :: i
+         integer :: i, k, he4id, he4index, flag
+         !integer :: h1id, mg24id      ! debugging
          type (star_info), pointer :: s
          ierr = 0
          call star_ptr(id, s, ierr)
@@ -124,18 +126,51 @@
      
          names(1) = 'He_env_mass'
          
-         ! Find He envelope mass (mass where helium is most abundant)
-         i = 1
-         !do while (s% xa(3,i) > s% xa(4,i))        ! he4 > c12
-         do while (s% xa(3,i) > 1e-1)               ! he4 > 1e-1    ! carbon is not always present
-             i = i+1
+         !!!!!! Find He envelope mass (mass where helium is most abundant) !!!!!!
+         
+         ! Find the index of he4 for current network
+         he4id = get_nuclide_index('he4')
+         he4index = s% net_iso(he4id)
+         
+         !! Debug !!
+         !he4id = get_nuclide_index('he4')
+         !write(*,*) 'he4id = ', he4id
+         !write(*,*) 'net_iso(he4id) = ', s% net_iso(he4id)
+         
+         !h1id = get_nuclide_index('h1')
+         !write(*,*) 'h1id = ', h1id
+         !write(*,*) 'net_iso(h1id) = ', s% net_iso(h1id)
+         
+         !mg24id = get_nuclide_index('mg24')
+         !write(*,*) 'mg24id = ', mg24id
+         !write(*,*) 'net_iso(mg24id) = ', s% net_iso(mg24id)
+         
+         
+         
+         ! Option A
+         !k = 1   ! zone number, starting from surface
+         !do while (s% xa(3,k) > 1e-1)    ! while he4 > some constant chosen mass fraction
+         !    k = k+1
+         !end do
+         
+         ! Option B
+         k = 1        ! zone #, from outside moving in
+         flag = 0     ! flag = 0 if he4 > other species in zone
+         do while (flag == 0)                               ! while he4 is the most abundant species in zone
+             do i = 1, s% species                           ! check against all other present species (inc he4)
+                 if (s% xa(he4index,k) < s% xa(i,k)) then   ! if he4 < any of the other present species
+                     flag = 1                               ! then this is the boundary
+                 end if
+             end do
+             k = k+1
          end do
          
-         
-         vals(1)=s% star_mass - (s% m(i) / msol)
+         ! He envelope is the total mass of the star minus 
+         ! the mass interior to the boundary found above
+         vals(1)=s% star_mass - (s% m(k) / msol)  
          
          ! debug check
-         !write(*,*) names(1), ' = ', vals(1)
+         write(*,*) names(1), ' = ', vals(1)
 
       end subroutine data_for_extra_history_columns
 

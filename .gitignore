@@ -1,8 +1,8 @@
 LOGS
 photos
 make
-saved_LOGS
 plotting_scripts
+*.datasa
 
 clean
 mk
@@ -11,6 +11,7 @@ re
 star
 
 src/run.f
+src/run_star_extras working copy.f
 
 .svninfo
 restart_photo

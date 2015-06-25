@@ -11,9 +11,10 @@
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_8.0.mod'
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5.mod'
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
+    !saved_model_name = 'models/temp.mod'
 
-    !save_model_number = 5960
-    !save_model_filename = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
+    !save_model_number = 3000
+    !save_model_filename = 'models/temp.mod'
     
 
     set_initial_model_number = .true.
@@ -31,8 +32,8 @@
 
 
   !! Choose ONE of the following and ensure the other is *commented out* !!
-    !rate_tables_dir = './3a_rate/HHR'  
-    set_rate_3a = 'NACRE' 
+    rate_tables_dir = './3a_rate/HHR'  
+    !set_rate_3a = 'NACRE' 
 
     
     set_tau_factor = .true. ! the test model was saved with this tau factor
@@ -55,11 +56,11 @@
 
 &controls
 
-    write_profiles_flag = .true.
+    write_profiles_flag = .false.
       
     !photostep = 100
-    !profile_interval = 10
-    max_num_profile_models = 10
+    profile_interval = 2
+    max_num_profile_models = 50
     !history_interval = 10
     !terminal_cnt = 10
     !write_header_frequency = 10
@@ -68,21 +69,46 @@
 
   ! Stopping conditions
 
-    max_model_number = 110000
+    max_model_number = 100000
 
     min_timestep_limit = 1d-12
 
-    !max_age = 2d7
+    max_age = 1e10
+
+    log_L_upper_limit = 6.0
 
 
 
   ! Accretion controls
 
+      ! * Only use one of the following two lines * !
+    !mass_change = 1e-6   ! constant rate of accretion (Msun/year)
+    use_other_adjust_mdot = .true.   ! Evolving mdot, 0.03 * time[yrs]^(-1)
+
+
     accrete_same_as_surface = .false. 
     accrete_given_mass_fractions = .true. 
+    
+    !!! Pure helium !!!
     num_accretion_species = 1
     accretion_species_id(1) = 'he4'
     accretion_species_xa(1) = 1
+
+    !!! Test "better" composition
+   ! num_accretion_species = 6
+   !  accretion_species_id(1) = 'he4'
+   !  accretion_species_xa(1) = 0.9808
+   !  accretion_species_id(2) = 'c12'
+   !  accretion_species_xa(2) = 0.0002
+   !  accretion_species_id(3) = 'n14'
+   !  accretion_species_xa(3) = 0.0125
+   !  accretion_species_id(4) = 'o16'
+   !  accretion_species_xa(4) = 0.0005
+   !  accretion_species_id(5) = 'ne20'
+   !  accretion_species_xa(5) = 0.0019
+   !  accretion_species_id(6) = 'mg24'
+   !  accretion_species_xa(6) = 0.0041
+
 
     ! * Only use one of the following * !
       !mass_change = 1e-6   ! constant rate of accretion (Msun/year)

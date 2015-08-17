@@ -13,7 +13,7 @@
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
     !saved_model_name = 'models/temp.mod'
 
-    !save_model_number = 3000
+    !save_model_number = 23002
     !save_model_filename = 'models/temp.mod'
     
 
@@ -22,22 +22,22 @@
 
   !! MUST be non-zero if using the evolving mdot !!
     set_initial_age = .true.
-    initial_age = 3e4 ! in years
+    initial_age = 0 ! in years
 
-    set_initial_dt = .true.
-    years_for_initial_dt = 1 ! in years
+    !set_initial_dt = .true.
+    !years_for_initial_dt = 1 ! in years
 
     change_net = .true.      
     new_net_name = 'co_burn.net'
 
 
   !! Choose ONE of the following and ensure the other is *commented out* !!
-    rate_tables_dir = './3a_rate/HHR'  
-    !set_rate_3a = 'NACRE' 
+    !rate_tables_dir = './3a_rate/HHR'
+    set_rate_3a = 'NACRE'
 
     
     set_tau_factor = .true. ! the test model was saved with this tau factor
-    set_to_this_tau_factor = 300
+    set_to_this_tau_factor = 300  !300
 
     !relax_tau_factor = .true. ! gradually change tau_factor, reconverging at each step.
     !relax_to_this_tau_factor = 1e4 
@@ -59,8 +59,8 @@
     write_profiles_flag = .false.
       
     !photostep = 100
-    profile_interval = 2
-    max_num_profile_models = 50
+    !profile_interval = 2
+    !max_num_profile_models = 100
     !history_interval = 10
     !terminal_cnt = 10
     !write_header_frequency = 10
@@ -71,7 +71,7 @@
 
     max_model_number = 100000
 
-    min_timestep_limit = 1d-12
+    min_timestep_limit = 1d-15
 
     max_age = 1e10
 
@@ -81,9 +81,17 @@
 
   ! Accretion controls
 
-      ! * Only use one of the following two lines * !
-    !mass_change = 1e-6   ! constant rate of accretion (Msun/year)
-    use_other_adjust_mdot = .true.   ! Evolving mdot, 0.03 * time[yrs]^(-1)
+    use_other_adjust_mdot = .true. 
+
+    ! x_integer_ctrl sets the brand of accretion
+    !   0 is a constant mdot, defined by x_ctrl(1), think of this as the old "mass_change"
+    !   1 means decaying mdot, defined by 0.03*(star_age)^-1
+    !   
+    !   if using the decaying mdot, make sure the initial age is nonzero
+    !   if using the constant mdot, probably want to make the initial age zero
+
+    x_integer_ctrl(1) = 0
+    x_ctrl(1) = 1d-7        ! replaces mass_change, only if using constant mdot
 
 
     accrete_same_as_surface = .false. 
@@ -108,11 +116,6 @@
    !  accretion_species_xa(5) = 0.0019
    !  accretion_species_id(6) = 'mg24'
    !  accretion_species_xa(6) = 0.0041
-
-
-    ! * Only use one of the following * !
-      !mass_change = 1e-6   ! constant rate of accretion (Msun/year)
-      use_other_adjust_mdot = .true.   ! Evolving mdot, 0.03 * time[yrs]^(-1)
 
 
 

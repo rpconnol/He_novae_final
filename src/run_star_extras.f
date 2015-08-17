@@ -360,7 +360,18 @@
          
          call star_ptr(id, s, ierr)
          
-         s% mass_change = 0.03 * ((s% star_age)**(-1.0))
+         
+             
+         if (s% L_nuc_burn_total < 1e4) then
+             if (s% x_integer_ctrl(1) == 0) then
+                 s% mass_change = s% x_ctrl(1)
+             endif
+             if (s% x_integer_ctrl(1) == 1) then
+                 s% mass_change = 0.03 * ((s% star_age)**(-1.0))
+             endif
+         else
+	         s% mass_change = 1d-99
+         end if
          
       end subroutine my_other_adjust_mdot
       

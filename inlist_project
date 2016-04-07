@@ -3,17 +3,19 @@
     show_log_description_at_start = .false.
 
     load_saved_model = .true.
-    saved_model_name = 'models/1.000_Tc_7.2.mod'  
-    !saved_model_name = 'models/1.000_Tc_7.6.mod'
+    !saved_model_name = 'models/1.000_Tc_7.2.mod'  
+    saved_model_name = 'models/1.000_Tc_7.6.mod'
     !saved_model_name = 'models/1M_betweenbursts_nacre_2e-7.mod'
     !saved_model_name = 'models/1M_betweenbursts_hhr_2e-9.mod'
     !saved_model_name = 'models/0.602M_from_3.2z0.02.mod'
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_8.0.mod'
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5.mod'
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
+    !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot1e-7.mod'
     !saved_model_name = 'models/temp.mod'
 
-    !save_model_number = 23002
+
+    !save_model_number = 9747
     !save_model_filename = 'models/temp.mod'
     
 
@@ -37,10 +39,10 @@
 
     
     set_tau_factor = .true. ! the test model was saved with this tau factor
-    set_to_this_tau_factor = 300  !300
+    set_to_this_tau_factor = 30  !300
 
     !relax_tau_factor = .true. ! gradually change tau_factor, reconverging at each step.
-    !relax_to_this_tau_factor = 1e4 
+    !relax_to_this_tau_factor = 1 
     !dlogtau_factor = 0.1 ! change log10(tau_factor) by at most this amount per step
 
     change_v_flag = .true.
@@ -50,17 +52,20 @@
 
     pause_before_terminate = .true.
 
+    history_columns_file = 'peakburn_conditions'
+
 / !end of star_job namelist
 
 
 
 &controls
 
-    write_profiles_flag = .false.
+    write_profiles_flag = .true.
       
     !photostep = 100
-    !profile_interval = 2
-    !max_num_profile_models = 100
+    profile_interval = 5
+    max_num_profile_models = 100
+    priority_profile_interval = 100000   ! don't want these
     !history_interval = 10
     !terminal_cnt = 10
     !write_header_frequency = 10
@@ -69,13 +74,15 @@
 
   ! Stopping conditions
 
-    max_model_number = 100000
+    max_model_number = 20000
 
     min_timestep_limit = 1d-15
 
-    max_age = 1e10
+    !max_age = 1e8
 
     log_L_upper_limit = 6.0
+
+    !power_nuc_burn_upper_limit = 1d8     ! just for Brooks2015 runs
 
 
 
@@ -91,7 +98,7 @@
     !   if using the constant mdot, probably want to make the initial age zero
 
     x_integer_ctrl(1) = 0
-    x_ctrl(1) = 1d-7        ! replaces mass_change, only if using constant mdot
+    x_ctrl(1) = 5d-7        ! replaces mass_change, only if using constant mdot
 
 
     accrete_same_as_surface = .false. 
@@ -130,11 +137,11 @@
 
   ! Other Controls
 
-    varcontrol_target = 1d-2
+    varcontrol_target = 1d-4
 
     okay_to_reduce_gradT_excess = .true.
 
-    use_Type2_opacities = .true.    
+    use_Type2_opacities = .true.
     Zbase = 0.02d0
 
     which_atm_option = 'grey_and_kap'

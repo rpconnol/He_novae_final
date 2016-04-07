@@ -29,6 +29,8 @@
       
       implicit none
       
+      logical :: accreteflag
+      
       ! these routines are called by the standard run_star check_model
       contains
       
@@ -44,6 +46,8 @@
          ! e.g., other_wind, other_mixing, other_energy  (see star_data.inc)
          
          s% other_adjust_mdot => my_other_adjust_mdot
+         
+         accreteflag = .true.   ! start on
      
       end subroutine extras_controls
   
@@ -361,17 +365,27 @@
          call star_ptr(id, s, ierr)
          
          
-             
-         if (s% L_nuc_burn_total < 1e4) then
-             if (s% x_integer_ctrl(1) == 0) then
-                 s% mass_change = s% x_ctrl(1)
+         ! accreteflag       true means accretion is on, false off
+         
+         if (accreteflag .eqv. .true.) then
+             if (s% x_integer_ctrl(1) == 0) then        ! constant mdot
+                 s% mass_change = s% x_ctrl(1)         
              endif
-             if (s% x_integer_ctrl(1) == 1) then
-                 s% mass_change = 0.03 * ((s% star_age)**(-1.0))
+             if (s% x_integer_ctrl(1) == 1) then        ! evolving mdot
+                 s% mass_change = 0.03 * ((s% star_age)**(-1.0))    
              endif
-         else
-	         s% mass_change = 1d-99
+             if (s% L_nuc_burn_total > 1e8) then        ! if Lnuc > 1e8 Lsun then shut off accretion
+                 accreteflag = .false.
+             endif
+         endif
+         if (accreteflag .eqv. .false.) then
+             s% mass_change = 1d-99                     ! no accretion
+             if (s% L_nuc_burn_total < 1e4) then        ! if not acreting and Lnuc drops back below 1e4
+                 accreteflag = .true.                   ! then turn on accretion
+             endif
          end if
+         
+         write(*,*) 'accreteflag = ', accreteflag
          
       end subroutine my_other_adjust_mdot
       

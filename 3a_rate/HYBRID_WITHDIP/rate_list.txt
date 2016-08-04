@@ -1,0 +1,8 @@
+
+! this is an example of a rates list file for use with mesa/rates
+
+! the mesa/data/net_data/rates directory has sample rate files
+
+! pairs of rate name and rate file
+
+r_he4_he4_he4_to_c12 '3a_hybrid_withdip_b.txt'

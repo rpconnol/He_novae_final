@@ -30,6 +30,12 @@
       implicit none
       
       logical :: accreteflag
+
+      ! Adapted from nova test suite
+      integer :: num_bursts = 0
+      logical :: waiting_for_burst = .true.
+      real(dp) :: L_nuc_burst = 1d8, L_nuc_between = 1d4 ! Lsun units
+
       
       ! these routines are called by the standard run_star check_model
       contains
@@ -78,21 +84,25 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
          extras_check_model = keep_going         
-         if (.false. .and. s% star_mass_h1 < 0.35d0) then
-            ! stop when star hydrogen mass drops to specified level
-            extras_check_model = terminate
-            write(*, *) 'have reached desired hydrogen mass'
-            return
+         
+         if (s% x_integer_ctrl(2) == 1) then
+         if (s% L_nuc_burn_total > L_nuc_burst) then
+            if (waiting_for_burst) then
+               num_bursts = num_bursts + 1
+               write(*,*) 'num_bursts', num_bursts
+               waiting_for_burst = .false.
+            end if
+         else if (s% L_nuc_burn_total < L_nuc_between) then
+            if (num_bursts >= s% x_ctrl(2)) then
+               write(*,*) 'have finished burst'
+               extras_check_model = terminate
+               s% termination_code = t_extras_check_model
+            end if
+            waiting_for_burst = .true.
+         end if
          end if
 
-
-         ! if you want to check multiple conditions, it can be useful
-         ! to set a different termination code depending on which
-         ! condition was triggered.  MESA provides 9 customizeable
-         ! termination codes, named t_xtra1 .. t_xtra9.  You can
-         ! customize the messages that will be printed upon exit by
-         ! setting the corresponding termination_code_str value.
-         ! termination_code_str(t_xtra1) = 'my termination condition'
+         
 
          ! by default, indicate where (in the code) MESA terminated
          if (extras_check_model == terminate) s% termination_code = t_extras_check_model
@@ -106,7 +116,7 @@
          ierr = 0
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
-         how_many_extra_history_columns = 1
+         how_many_extra_history_columns = 2
       end function how_many_extra_history_columns
   
   
@@ -129,6 +139,7 @@
      
      
          names(1) = 'He_env_mass'
+         names(2) = 'He_env_base_radius'
          
          !!!!!! Find He envelope mass (mass where helium is most abundant) !!!!!!
          
@@ -172,6 +183,9 @@
          ! He envelope is the total mass of the star minus 
          ! the mass interior to the boundary found above
          vals(1)=s% star_mass - (s% m(k) / msol)  
+         
+         ! The radius at the base of the helium envelope
+         vals(2)=(s% r(k) / rsol)
          
          ! debug check
          write(*,*) names(1), ' = ', vals(1)

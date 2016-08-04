@@ -1,6 +1,6 @@
 &pgstar
          
-      Profile_Panels2_win_flag = .true. 	! abundances and burning
+      Profile_Panels2_win_flag = .false. 	! abundances and burning
       Grid5_win_flag = .true. 			! TRho, HR, Mdot and R vs time, and some text
 
 

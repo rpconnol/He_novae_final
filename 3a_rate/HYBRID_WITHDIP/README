@@ -1,0 +1,14 @@
+3a_hybrid_withdip.txt
+
+Created on 5/3/16 with hybrid_3a_rate_2.py
+
+Blend range happens from T8 = 0.51 to 0.54 and then from 0.83 to 0.87
+
+
+
+
+3a_hybrid_withdip_b.txt
+
+Created on 5/3/16 with hybrid_3a_rate_2b.py
+
+Blend range happens from T8 = 0.51 to 0.54, above transition it's 100% HHR (as opposed to a double transition BACK to NACRE above 0.9ish

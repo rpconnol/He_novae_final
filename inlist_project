@@ -12,11 +12,14 @@
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5.mod'
     !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
     !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot1e-7.mod'
+    !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot3e-7_5bursts.mod'
+    !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot1e-7_5bursts.mod'
+    !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot1e-6.mod'
     !saved_model_name = 'models/temp.mod'
 
-
-    !save_model_number = 9747
-    !save_model_filename = 'models/temp.mod'
+    !save_model_when_terminate = .true.
+    !save_model_number = 5032
+    !save_model_filename = 'models/final.mod'
     
 
     set_initial_model_number = .true.
@@ -24,7 +27,7 @@
 
   !! MUST be non-zero if using the evolving mdot !!
     set_initial_age = .true.
-    initial_age = 0 ! in years
+    initial_age = 3e4 ! in years
 
     !set_initial_dt = .true.
     !years_for_initial_dt = 1 ! in years
@@ -35,7 +38,11 @@
 
   !! Choose ONE of the following and ensure the other is *commented out* !!
     !rate_tables_dir = './3a_rate/HHR'
-    set_rate_3a = 'NACRE'
+    !set_rate_3a = 'NACRE'
+    !rate_tables_dir = './3a_rate/NACRE'
+    !rate_tables_dir = './3a_rate/FYNBO'
+    rate_tables_dir = './3a_rate/HYBRID_NODIP'
+    !rate_tables_dir = './3a_rate/HYBRID_WITHDIP'
 
     
     set_tau_factor = .true. ! the test model was saved with this tau factor
@@ -60,13 +67,13 @@
 
 &controls
 
-    write_profiles_flag = .true.
+    write_profiles_flag = .false.
       
     !photostep = 100
-    profile_interval = 5
+    profile_interval = 2
     max_num_profile_models = 100
     priority_profile_interval = 100000   ! don't want these
-    !history_interval = 10
+    history_interval = 5    ! 10
     !terminal_cnt = 10
     !write_header_frequency = 10
 
@@ -74,15 +81,19 @@
 
   ! Stopping conditions
 
-    max_model_number = 20000
+    max_model_number = 100000
 
     min_timestep_limit = 1d-15
 
-    !max_age = 1e8
+    max_age = 1e8
 
     log_L_upper_limit = 6.0
 
     !power_nuc_burn_upper_limit = 1d8     ! just for Brooks2015 runs
+
+    ! Burst counting
+    x_integer_ctrl(2) = 0   ! 1 means count bursts and stop after...
+    x_ctrl(2) = 20          ! this many bursts happen
 
 
 
@@ -97,8 +108,8 @@
     !   if using the decaying mdot, make sure the initial age is nonzero
     !   if using the constant mdot, probably want to make the initial age zero
 
-    x_integer_ctrl(1) = 0
-    x_ctrl(1) = 5d-7        ! replaces mass_change, only if using constant mdot
+    x_integer_ctrl(1) = 1
+    x_ctrl(1) = 3e-7        ! replaces mass_change, only if using constant mdot
 
 
     accrete_same_as_surface = .false. 
@@ -131,13 +142,14 @@
     super_eddington_wind_eta = 1
     super_eddington_wind_Ledd_factor = 1
 
-    !Future: RLO?
-
+    ! Roche Lobe Overflow
+    !rlo_wind_eta = 1.2
+    !rlo_wind_roche_lobe_radius = 0.053
 
 
   ! Other Controls
 
-    varcontrol_target = 1d-4
+    varcontrol_target = 1d-2
 
     okay_to_reduce_gradT_excess = .true.
 
@@ -147,6 +159,9 @@
     which_atm_option = 'grey_and_kap'
     
     Pextra_factor = -1
+
+
+    
 
 
 
@@ -165,7 +180,7 @@
       !delta_lgL_He_limit = 0.025 ! limit for magnitude of change in lgL_He
       !delta_lgL_He_hard_limit = 0.5
       !lgL_He_burn_min = 0.0 ! ignore changes in lgL_He if value is less than this
-
+      !lgL_He_burn_min = -4.0
     
 
 

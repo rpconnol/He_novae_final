@@ -5,4 +5,4 @@
 
 ! pairs of rate name and rate file
 
-r_he4_he4_he4_to_c12 '3a_hybrid_withdip_b.txt'
+r_he4_he4_he4_to_c12 '3a_hybrid_withdip.txt'

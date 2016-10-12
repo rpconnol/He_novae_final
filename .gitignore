@@ -18,3 +18,4 @@ src/run_star_extras working copy.f
 
 .svninfo
 restart_photo
+*.DS_Store

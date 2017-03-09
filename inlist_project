@@ -5,21 +5,18 @@
     load_saved_model = .true.
     !saved_model_name = 'models/1.000_Tc_7.2.mod'  
     saved_model_name = 'models/1.000_Tc_7.6.mod'
-    !saved_model_name = 'models/1M_betweenbursts_nacre_2e-7.mod'
-    !saved_model_name = 'models/1M_betweenbursts_hhr_2e-9.mod'
-    !saved_model_name = 'models/0.602M_from_3.2z0.02.mod'
-    !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_8.0.mod'
-    !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5.mod'
-    !saved_model_name = 'models/1.00from8.0_make_o_ne_wd/logTc_7.5_postburst1e-6.mod'
-    !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot1e-7.mod'
-    !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot3e-7_5bursts.mod'
-    !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot1e-7_5bursts.mod'
-    !saved_model_name = 'models/1.000_Tc_7.6_primed_mdot1e-6.mod'
-    !saved_model_name = 'models/temp.mod'
+    !saved_model_name = 'models/0.6M_logTc7.6_from_3.4z0.02_primed.mod'
+    !saved_model_name = 'models/1.0M_logTc7.6_from_8.0z0.02_norotation.mod'
 
-    !save_model_when_terminate = .true.
-    !save_model_number = 5032
-    !save_model_filename = 'models/final.mod'
+    !saved_model_name = 'models/1.000_Tc_7.6_after_constmdot_5e-7.mod'
+    !saved_model_name = 'models/1.000_Tc_7.6_after_constmdot_2e-7.mod'
+    !saved_model_name = 'models/0.6M_logTc7.6_from_3.4z0.02_stripped.mod'
+    !saved_model_name = 'models/0.6M_logTc7.2_from_3.4z0.02_stripped.mod'
+    !saved_model_name = 'models/temp2.mod'
+
+    save_model_when_terminate = .true.
+    !save_model_number = 11050
+    save_model_filename = 'models/final.mod'
     
 
     set_initial_model_number = .true.
@@ -29,17 +26,18 @@
     set_initial_age = .true.
     initial_age = 1.5e4 ! in years
 
-    !set_initial_dt = .true.
-    !years_for_initial_dt = 1 ! in years
+    set_initial_dt = .true.
+    years_for_initial_dt = 1 ! in years
 
     change_net = .true.      
-    new_net_name = 'co_burn.net'
+    !new_net_name = 'co_burn.net'
+    new_net_name = 'co_burn_plus.net'
 
 
   !! Choose ONE of the following and ensure the other is *commented out* !!
     !set_rate_3a = 'NACRE'
-    rate_tables_dir = './3a_rate/NACRE'
-    !rate_tables_dir = './3a_rate/HHR'
+    !rate_tables_dir = './3a_rate/NACRE'
+    rate_tables_dir = './3a_rate/HHR'
     !rate_tables_dir = './3a_rate/FYNBO'
     !rate_tables_dir = './3a_rate/HYBRID_NODIP'
     !rate_tables_dir = './3a_rate/HYBRID_WITHDIP'
@@ -59,7 +57,7 @@
 
     pause_before_terminate = .true.
 
-    history_columns_file = 'peakburn_conditions'
+    history_columns_file = 'extra_hist_cols'
 
 / !end of star_job namelist
 
@@ -93,7 +91,8 @@
 
     ! Burst counting
     x_integer_ctrl(2) = 0   ! 1 means count bursts and stop after...
-    x_ctrl(2) = 20          ! this many bursts happen
+    x_integer_ctrl(3) = 20  ! this many bursts happen
+        ! counts a "burst" as the END of a period when Lnuc > 1e4 Lsun
 
 
 
@@ -109,16 +108,30 @@
     !   if using the constant mdot, probably want to make the initial age zero
 
     x_integer_ctrl(1) = 1
-    x_ctrl(1) = 3.5e-7        ! replaces mass_change, only if using constant mdot
+    x_ctrl(1) = 5e-7        ! replaces mass_change, only if using constant mdot
+        
+
+
+    x_ctrl(2) = 1e8  ! Lnuc at which to shut off accretion during flashes (in Lsun)
+		     ! Typically use 1e8, but if very large then accretion never stops
+    x_ctrl(3) = 1e4  ! Lnuc at which to turn accretion back on again after flashes (Lsun)
+		     ! Typically 1e4, but note: w/ He envelope, Ledd(1 Msun) ~ 6e4 Lsun
 
 
     accrete_same_as_surface = .false. 
     accrete_given_mass_fractions = .true. 
     
     !!! Pure helium !!!
-    num_accretion_species = 1
+   ! num_accretion_species = 1
+   ! accretion_species_id(1) = 'he4'
+   ! accretion_species_xa(1) = 1
+
+    !!! 99% he4 + 1% n14 !!!
+    num_accretion_species = 2
     accretion_species_id(1) = 'he4'
-    accretion_species_xa(1) = 1
+    accretion_species_xa(1) = 0.99
+    accretion_species_id(2) = 'n14'
+    accretion_species_xa(2) = 0.01
 
     !!! Test "better" composition
    ! num_accretion_species = 6
@@ -149,7 +162,7 @@
 
   ! Other Controls
 
-    varcontrol_target = 1d-2
+    varcontrol_target = 1d-3
 
     okay_to_reduce_gradT_excess = .true.
 

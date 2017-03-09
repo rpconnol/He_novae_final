@@ -34,7 +34,7 @@
       ! Adapted from nova test suite
       integer :: num_bursts = 0
       logical :: waiting_for_burst = .true.
-      real(dp) :: L_nuc_burst = 1d8, L_nuc_between = 1d4 ! Lsun units
+      real(dp) :: L_nuc_burst = 1d4, L_nuc_between = 1d4 ! Lsun units
 
       
       ! these routines are called by the standard run_star check_model
@@ -84,6 +84,9 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
          extras_check_model = keep_going         
+
+         !L_nuc_burst = s% x_ctrl(2)
+         !L_nuc_between = s% x_ctrl(3)
          
          if (s% x_integer_ctrl(2) == 1) then
          if (s% L_nuc_burn_total > L_nuc_burst) then
@@ -93,8 +96,8 @@
                waiting_for_burst = .false.
             end if
          else if (s% L_nuc_burn_total < L_nuc_between) then
-            if (num_bursts >= s% x_ctrl(2)) then
-               write(*,*) 'have finished burst'
+            if (num_bursts >= s% x_integer_ctrl(3)) then
+               write(*,*) 'have finished bursts'
                extras_check_model = terminate
                s% termination_code = t_extras_check_model
             end if
@@ -388,13 +391,13 @@
              if (s% x_integer_ctrl(1) == 1) then        ! evolving mdot
                  s% mass_change = 0.03 * ((s% star_age)**(-1.0))    
              endif
-             if (s% L_nuc_burn_total > 1e8) then        ! if Lnuc > 1e8 Lsun then shut off accretion
+             if (s% L_nuc_burn_total > s% x_ctrl(2)) then        ! if Lnuc > 1e8 Lsun then shut off accretion
                  accreteflag = .false.
              endif
          endif
          if (accreteflag .eqv. .false.) then
              s% mass_change = 1d-99                     ! no accretion
-             if (s% L_nuc_burn_total < 1e4) then        ! if not acreting and Lnuc drops back below 1e4
+             if (s% L_nuc_burn_total < s% x_ctrl(3)) then        ! if not acreting and Lnuc drops back below 1e4
                  accreteflag = .true.                   ! then turn on accretion
              endif
          end if

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Will save MESA results to saved_LOGS/N14_results/$1"
+
+rm ./LOGS/*
+
+./clear_cached_3a
+./rn
+
+mkdir "./saved_LOGS/N14_results/$1"
+cp "./LOGS/history.data" "./saved_LOGS/N14_results/$1"
+
+echo "History copied to saved_LOGS/N14_results/$1"
